@@ -4,7 +4,8 @@ document.onreadystatechange = function () {
     console.log('Loading');
   } else if (state == 'complete') {
       setTimeout(function(){
-         document.getElementById('load').style.visibility="hidden";
+		  var t = document.getElementById('load');
+         if (t) t.style.display='none';		 
       },1000);
   }
 }
