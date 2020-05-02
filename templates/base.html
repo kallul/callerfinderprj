@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">   
+    <link rel="stylesheet" href="{% static 'css/materialize.min.css' %}">
+    <title>Real Estate {% block title %}{% endblock %}</title>
+</head>
+<body>
+       
+    {% block content %}
+
+    {% endblock%}
+
+    <!--<script src="{% static 'js/materialize.min.js' %} "></script>-->
+    <script src="{% static 'js/jquery-3.3.1.min.js' %} "></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script src="{% static 'js/main.js' %} "></script>
+	<script type="text/javascript">
+        $(document).ready(function () {
+
+            const form_data = $('.form_phone');
+            form_data.submit(function () {
+                $.ajax({
+                    url: '/ajaxpost',
+                    type: 'POST',
+                    data: form_data.serialize(),
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    success: function (data) {
+                        console.log(data);
+                        if (data['status_code'] === 200) {
+                            Materialize.toast('Please Check your phone for confirmation', 2000);
+                            $('#status').html(' Waiting for Confirmation <div class="preloader-wrapper small active">' +
+                                '<div class="spinner-layer spinner-green-only">' +
+                                '<div class="circle-clipper left">' +
+                                '<div class="circle"></div>' +
+                                '</div><div class="gap-patch">' +
+                                '<div class="circle"></div>' +
+                                '</div><div class="circle-clipper right">' +
+                                '<div class="circle"></div>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>');
+
+                            const access_token = setInterval(check_access_token.bind(null, data['requestId']), 4000);
+
+                            function check_access_token(requestId) {
+                                $.ajax({
+                                    type: "GET",
+                                    url: "/auth/token",
+                                    data: {
+                                        'requestId': requestId
+                                    },
+                                    success: function (response) {
+                                        console.log(response);
+                                        if (response['status'] === 'OK') {
+                                            clearInterval(access_token);
+                                            $('#status').html('<h4>' + 'Welcome ' + response['name'] + '</h4>');
+                                        } else if (response['status'] === 'NO') {
+                                            console.log('Requesting');
+                                        } else {
+                                            console.log('ERROR');
+                                            clearInterval(access_token);
+                                        }
+                                    },
+                                    error: function () {
+                                        console.log('Error, Please refresh this page');
+                                        return false;
+                                    }
+                                });
+                            }
+
+                            $(window).on("unload", function (e) {
+                                clearInterval(access_token);
+                            });
+                        } else {
+                            Materialize.toast('Error: ' + data['text'], 3000);
+                        }
+                    },
+                    failure: function (data) {
+                        alert('Got an error dude');
+                    }
+                });
+                return false;
+            });
+        })
+        ;
+    </script>
+</body>
+
+</html>
