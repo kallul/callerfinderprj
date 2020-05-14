@@ -72,8 +72,8 @@
                                         console.log(response);
                                         if (response['status'] === 'OK') {
                                             clearInterval(access_token);
-                                            $('#status').html('<h4>' + 'Welcome ' + response['name'] + '</h4>');
-											$('#login_div').hide();
+                                            $('#status').html('<h4>' + 'Welcome ' + response['name'] + '</h4>' + '&nbsp;' + '<a href="{% url 'search' %}">Search Now</a>');					     	
+					    $('#login_div').hide();
                                         } else if (response['status'] === 'NO') {
                                             console.log('Requesting');
                                         } else {
