@@ -59,7 +59,7 @@
                                         console.log(response);
                                         if (response['status'] === 'OK') {
                                             clearInterval(access_token);
-                                            $('#status').html('<h4>' + 'Welcome ' + response['name'] + '</h4>' + '&nbsp;' + '<a href="{% url 'search' %}">Search Now</a>');					     	
+                                            $('#status').html('<h6>' + 'Welcome ' + response['name'] + '</h6>' + '&nbsp;' + '<h6><a href="{% url 'search' %}">Search Now</a></h6>');					     	
 					    $('#login_div').hide();
                                         } else if (response['status'] === 'NO') {
                                             console.log('Requesting');
