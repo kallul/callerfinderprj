@@ -13,6 +13,19 @@
 <body>
        
     {% block content %}
+	<div class="row" id="show_search" style="display: none">
+		<form class="col s12 form_phone_search" action="" method="post">
+			<div class="row">
+				<div class="input-field col s4 offset-s4">
+					<i class="material-icons prefix">phone</i>
+					<input id="icon_telephone" type="tel" class="validate" name="form_phone_search" autocomplete="off">
+					<label for="icon_telephone">Phone Number</label>
+					<input type="submit" value="Submit"/>
+				</div>
+				<div class="col s4 offset-s4" id="status_search"></div>
+			</div>
+		</form>
+	</div>
 
     {% endblock%}
 
@@ -60,6 +73,7 @@
                                         if (response['status'] === 'OK') {
                                             clearInterval(access_token);
                                             $('#status').html('<h4>' + 'Welcome ' + response['name'] + '</h4>');
+											$('#login_div').hide();
                                         } else if (response['status'] === 'NO') {
                                             console.log('Requesting');
                                         } else {
@@ -80,7 +94,9 @@
                         } else {
                             Materialize.toast('Error: ' + data['text'], 3000);
                         }
-                    },
+						
+						jQuery("#show_search").html(data);
+					},
                     failure: function (data) {
                         alert('Got an error dude');
                     }
