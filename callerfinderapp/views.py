@@ -12,7 +12,10 @@ import os
 
 def index(request):
     return render(request, 'callerfinderapp/index.html')
-    
+
+def search_phone(request):
+    return render(request, 'callerfinderapp/search.html')
+
 def get_name(access_token):
     url = 'https://profile4.truecaller.com/v1/default'
     headers = {'content-type': 'application/json', 'Authorization': 'Bearer ' + access_token}
